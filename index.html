@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון נומרולוגי לפסגות ואתגרים</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0e6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #6a0dad;
+        }
+        input {
+            margin: 10px 0;
+            padding: 5px;
+        }
+        button {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #6a0dad;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>מחשבון נומרולוגי לפסגות ואתגרים</h1>
+        <input type="date" id="birthdate" required>
+        <br>
+        <button onclick="calculate()">חשב</button>
+        <table id="resultTable" style="display: none;">
+            <tr>
+                <th>אתגרים</th>
+                <th>פסגות</th>
+                <th>גיל</th>
+            </tr>
+            <tr>
+                <td id="challenge1"></td>
+                <td id="peak1"></td>
+                <td id="age1"></td>
+            </tr>
+            <tr>
+                <td id="challenge2"></td>
+                <td id="peak2"></td>
+                <td id="age2"></td>
+            </tr>
+            <tr>
+                <td id="challenge3"></td>
+                <td id="peak3"></td>
+                <td id="age3"></td>
+            </tr>
+            <tr>
+                <td id="challenge4"></td>
+                <td id="peak4"></td>
+                <td id="age4"></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function reduceToSingleDigit(num) {
+            num = Math.abs(num);  // Convert to absolute value
+            while (num > 9) {
+                num = num.toString().split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
+            }
+            return num;
+        }
+
+        function calculate() {
+            const birthdate = document.getElementById('birthdate').value;
+            if (!birthdate) {
+                alert('נא להזין תאריך לידה');
+                return;
+            }
+
+            const [year, month, day] = birthdate.split('-');
+            const x = reduceToSingleDigit(day);
+            const y = reduceToSingleDigit(month);
+            const z = reduceToSingleDigit(year);
+
+            // Calculate Q
+            const Q = reduceToSingleDigit(x + y + z);
+            
+            // Calculate starting age for the first peak
+            const startingAge = 27 - Q;
+
+            const peak1 = reduceToSingleDigit(x + y);
+            const challenge1 = reduceToSingleDigit(Math.abs(x - y));
+            const peak2 = reduceToSingleDigit(x + z);
+            const challenge2 = reduceToSingleDigit(Math.abs(x - z));
+            const peak3 = reduceToSingleDigit(peak1 + peak2);
+            const challenge3 = reduceToSingleDigit(Math.abs(challenge1 - challenge2));
+            const peak4 = reduceToSingleDigit(y + z);
+            const challenge4 = reduceToSingleDigit(Math.abs(y - z));
+
+            document.getElementById('peak1').textContent = peak1;
+            document.getElementById('challenge1').textContent = challenge1;
+            document.getElementById('peak2').textContent = peak2;
+            document.getElementById('challenge2').textContent = challenge2;
+            document.getElementById('peak3').textContent = peak3;
+            document.getElementById('challenge3').textContent = challenge3;
+            document.getElementById('peak4').textContent = peak4;
+            document.getElementById('challenge4').textContent = challenge4;
+
+            document.getElementById('age1').textContent = `${startingAge}-${startingAge+9}`;
+            document.getElementById('age2').textContent = `${startingAge+9}-${startingAge+18}`;
+            document.getElementById('age3').textContent = `${startingAge+18}-${startingAge+27}`;
+            document.getElementById('age4').textContent = `${startingAge+27}-${startingAge+36}`;
+
+            document.getElementById('resultTable').style.display = 'table';
+        }
+    </script>
+</body>
+</html>
